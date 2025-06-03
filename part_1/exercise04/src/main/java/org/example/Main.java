@@ -1,6 +1,5 @@
 package org.example;
 
-import java.time.LocalTime;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -23,7 +22,7 @@ public class Main {
             }
             scan.nextLine();
         }
-        System.out.println(scan.nextInt());
+//        System.out.println(scan.nextInt());
         scan.close();
     }
 
