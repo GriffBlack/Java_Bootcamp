@@ -31,7 +31,6 @@ public class Main {
             }
             scan.nextLine();
         }
-//        System.out.println(scan.nextInt());
         scan.close();
     }
 
@@ -48,6 +47,7 @@ public class Main {
         }
         return result;
     }
+
     private static int[] fillResultArray(int sumDigits, int[] array) {
         int[] returnResult = new int[sumDigits];
         int index = 0;
@@ -59,10 +59,11 @@ public class Main {
         }
         return returnResult;
     }
+
     private static void printResult(int[] result) {
         for (int element : result) System.out.print(element + " ");
-//        System.out.println( sumDigits == -1 ? "There are no such elements" : sumDigits);
     }
+
     private static boolean isIdenticalFirstAndLastDigits(final int value){
         int first = value;
         int last = value % 10;
