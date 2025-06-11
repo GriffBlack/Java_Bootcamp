@@ -2,7 +2,6 @@ package org.example;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
@@ -11,8 +10,7 @@ public class Main {
             try {
                 System.out.println("Enter the number of Strings:");
                 List<User> users = new ArrayList<User>();
-//                Stream  stream = new Stream() {
-//                }
+
                 if (scan.hasNextInt()) {
                     int count = scan.nextInt();
                     while (count != 0) {
@@ -47,6 +45,7 @@ public class Main {
             }
         }
     }
+
     private static void printAnswer(List<User> users) {
         String  stringNamed = users.stream()
                 .filter(user -> user.getAge() >= 18)

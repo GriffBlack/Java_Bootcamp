@@ -4,13 +4,20 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
+    private static final int MAX_LONG_FIB = 92;
+    private static long[] cache;
+
     public static void main(String[] args) {
-        int number = inputNumber();
         try {
-            int outNumber = recursiveFibonacci(number);
+            int number = inputNumber();
+            cache = new long[number + 1];
+            if (number > MAX_LONG_FIB) {
+                throw new ArithmeticException();
+            }
+            long outNumber = recursiveFibonacci(number);
             printResult(outNumber);
         } catch (ArithmeticException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("Fibonacci number is too large for long type");
         }
     }
 
@@ -29,20 +36,27 @@ public class Main {
             } catch (InputMismatchException e) {
                 System.out.println("Couldn't parse a number. Please, try again");
                 scanner.nextLine();
+            } catch (ArithmeticException e) {
+                System.out.println("Error: " + e.getMessage());
             }
         }
         return getNumber;
     }
-    private static int recursiveFibonacci(int number) {
-        if (number == 0) return 0;
-        if (number == 1) return 1;
 
-        try {
-            int result = Math.addExact(recursiveFibonacci(number - 1), recursiveFibonacci(number - 2));
-            return result;
-        } catch (ArithmeticException e) {
-            throw new ArithmeticException("Fibonacci number is too large for long type");
+    private static long recursiveFibonacci(int n) {
+        if (n == 0) return 0;
+        if (n == 1) return 1;
+        if (cache[n] != 0) return cache[n]; // Используем кеш
+
+        long result = recursiveFibonacci(n - 1) + recursiveFibonacci(n - 2);
+
+        // Проверка на переполнение
+        if (result < 0) {
+            throw new ArithmeticException("Fibonacci(" + n + ") overflows long");
         }
+
+        cache[n] = result; // Сохраняем в кеш
+        return result;
     }
 
     private static void printResult(long result) {
