@@ -1,12 +1,16 @@
 package org.example;
 
 public class Dog extends Animal {
-    public Dog(String name, int age) {
-        super(name, age);
+    public Dog(String name, int age, double weight) {
+        super(name, age, weight);
     }
 
     @Override
+    public double getFeedInfoKg() {
+        return getWeight() * 0.3;
+    }
+    @Override
     public String toString() {
-        return  "Dog name: " + this.getName() + ", age: " + this.getAge();
+        return String.format("Dog name = %s, age = %d, mass = %.2f, feed = %.2f", getName(), getAge(), getWeight(), getFeedInfoKg());
     }
 }

@@ -18,61 +18,67 @@ public class Pets{
 
     void run() {
         pets = new ArrayList<>();
+        System.out.println("Enter the number of pet: ");
 
-        try {
-            System.out.println("Enter the number of pet: ");
-            int numPets = Integer.parseInt(scanner.nextLine());
-            if (numPets <= 0) {throw new NumberFormatException();}
-            for (int i = 0; i < numPets; i++) {
+        int numPets = readPositiveInt(scanner);
+        for (int i = 0; i < numPets; i++) {
+            try {
                 String type = scanner.nextLine();
-                if (type.equalsIgnoreCase("cat") || type.equalsIgnoreCase("dog")) {
-                    int age = 0;
-                    String name = "";
-                    boolean isValid = false;
-                    name = scanner.nextLine();
-                    while(!isValid) {
-                        try {
-                            age = Integer.parseInt(scanner.nextLine());
-                            isValid = true;
-                        } catch (NumberFormatException e) {
-                            System.out.println("Invalid age format. Please enter a valid number.");
-                        }
+                if (type.trim().equalsIgnoreCase("cat") || type.trim().equalsIgnoreCase("dog")) {
+                    String name = scanner.nextLine();
+                    int age = readPositiveInt(scanner);
+                    if(age <= 0) {
+                        throw new IllegalArgumentException("Incorrect input. Age <= 0");
                     }
-                    addPets(type, name, age);
+                    double weight = readPositiveDouble(scanner);
+                    if (weight <= 0) {
+                        throw new IllegalArgumentException("Incorrect input. Mass <= 0");
+                    }
+                    addPets(type, name, age, weight);
                 } else {
                     System.out.println("Incorrect input. Unsupported pet type");
                 }
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Could not parse a number. Please, try again");
+                scanner.nextLine();
+                i--;
             }
-            for (Animal pet : pets) {
-                System.out.println(pet);
-            }
-        } catch (NumberFormatException e) {
-            System.err.println("Invalid number format. Please enter a valid number.");
-        } catch (IllegalArgumentException e) {
-            System.err.println("Incorrect input. Unsupported pet type");
         }
-        catch (Exception e) {
-            System.err.println("Error : " + e.getMessage());
+        for (Animal pet : pets) {
+            System.out.println(pet);
         }
     }
 
-    public void addPets(String type, String name, int age) {
+    public void addPets(String type, String name, int age, double mass) {
         try {
-            if(age <= 0) {
-                throw new IllegalArgumentException("Incorrect input. Age <= 0");
-            }
-
-            Animal newPet;
-
-            if (type.equalsIgnoreCase("cat")) {
-                newPet = new Cat(name, age);
-                pets.add(newPet);
-            } else if (type.equalsIgnoreCase("dog")) {
-                newPet = new Dog(name, age);
-                pets.add(newPet);
-            }
+            Animal pet = type.trim().equalsIgnoreCase("dog")
+                    ? new Dog(name, age, mass)
+                    : new Cat(name, age, mass);
+            pets.add(pet);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    private static int readPositiveInt(Scanner scanner) {
+        while (true) {
+            try {
+                return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Could not parse a number. Please, try again:");
+            }
+        }
+    }
+
+    private static double readPositiveDouble(Scanner scanner) {
+        while (true) {
+            try {
+                return Double.parseDouble(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Could not parse a number. Please, try again:");
+            }
         }
     }
 
