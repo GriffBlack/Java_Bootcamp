@@ -24,8 +24,12 @@ public class Pets {
         for (int i = 0; i < numPets; i++) {
             try {
                 String type = scanner.nextLine();
-                if (!type.equals("dog") && !type.equals("cat") &&
-                        !type.equals("hamster") && !type.equals("guinea")) {
+                if (
+                        !type.trim().equalsIgnoreCase("dog") &&
+                        !type.trim().equalsIgnoreCase("cat") &&
+                        !type.trim().equalsIgnoreCase("hamster") &&
+                        !type.trim().equalsIgnoreCase("guinea"))
+                {
                     System.out.println("Incorrect input. Unsupported pet type");
                     continue;
                 }

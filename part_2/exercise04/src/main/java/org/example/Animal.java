@@ -14,5 +14,10 @@ public abstract class Animal {
     public int getAge() {
         return age;
     }
+
+    public void increaseAge() {
+        age++;
+    }
+
     abstract public String toString();
 }
