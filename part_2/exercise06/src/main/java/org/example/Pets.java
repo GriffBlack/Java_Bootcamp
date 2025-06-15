@@ -1,24 +1,23 @@
 package org.example;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.util.concurrent.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
 import java.util.stream.IntStream;
 
 public class Pets {
-    private final List<Animal> pets;
+    private final List<Animal> animals;
     private final Scanner scanner;
-    private static final Instant programStart = Instant.now();
-
-    private record WalkResult(Animal pet, Instant start, Instant end, double walkTime) {}
+    private AnimalIterator iterator;
 
     public Pets() {
-        this.pets = new ArrayList<>();
+        this.animals = new ArrayList<>();
         this.scanner = new Scanner(System.in);
+        this.iterator = new AnimalIterator(animals);
     }
 
-    private static Optional<Animal> readPet(Scanner scanner) {
+    private static Optional<Animal> readPet(Scanner scanner){
         try {
             String type = scanner.nextLine().trim().toLowerCase();
             if (!List.of("dog", "cat").contains(type)) {
@@ -41,6 +40,14 @@ public class Pets {
         }
     }
 
+    public void displayPets() {
+        iterator.reset(); // Сбрасываем итератор перед использованием
+
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next().toString());
+        }
+    }
+
     private static int readPositiveInt(Scanner scanner) {
         while (true) {
             try {
@@ -54,31 +61,10 @@ public class Pets {
     public void run() {
         int count = readPositiveInt(scanner);
 
-        IntStream.range(0, count).forEach(i -> readPet(scanner).ifPresent(pets::add));
+        IntStream.range(0, count).forEach(i -> readPet(scanner).ifPresent(animals::add));
 
-        ExecutorService executor = Executors.newFixedThreadPool(pets.size());
-        List<Future<WalkResult>> futures = new ArrayList<>();
 
-        for (Animal pet : pets) {
-            Future<WalkResult> future = executor.submit(() -> {
-                Instant start = Instant.now();
-                pet.setStartTime(Duration.between(programStart, Instant.now()).toMillis() / 1000.0);
-                double walkTime = pet.goToWalk();
-                Instant end = Instant.now();
-                pet.setEndTime(Duration.between(programStart, Instant.now()).toMillis() / 1000.0);
-                return new WalkResult(pet, start, end, walkTime);
-            });
-            futures.add(future);
-        }
-
-        executor.shutdown();
-        try {
-            executor.awaitTermination(1, TimeUnit.HOURS);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-
-        pets.forEach(System.out::println);
+        displayPets();
     }
 
     public static void main(String[] args) {
